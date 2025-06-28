@@ -44,41 +44,49 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">GrosirMuah</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <div class="container">
+        <a class="navbar-brand" href="{{ url('/') }}">GrosirMuah</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="mainNavbar">
-                <ul class="navbar-nav ms-auto align-items-lg-center">
-                    @auth
-                        @if (Auth::user()->role === 'admin')
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('products.index') ? 'active' : '' }}" href="{{ route('products.index') }}">Produk</a>
-                            </li>
-                        @endif
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                @auth
+                    @if (Auth::user()->role === 'admin')
                         <li class="nav-item">
-                            <span class="nav-link disabled">
-                                <i class="bi bi-person-circle"></i>
-                                {{ Auth::user()->name }} ({{ ucfirst(Auth::user()->role) }})
-                            </span>
+                            <a class="nav-link {{ request()->routeIs('products.index') ? 'active' : '' }}" href="{{ route('products.index') }}">Produk</a>
                         </li>
                         <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="btn btn-link nav-link" style="display:inline; padding: 0;">Logout</button>
-                            </form>
+                            <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">Pengguna</a>
                         </li>
-                    @else
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}">Login</a>
+                            <a class="nav-link {{ request()->routeIs('report.index') ? 'active' : '' }}" href="{{ route('report.index') }}">Laporan</a>
                         </li>
-                    @endauth
-                </ul>
-            </div>
+                    @endif
+
+                    <li class="nav-item">
+                        <span class="nav-link disabled">
+                            <i class="bi bi-person-circle"></i>
+                            {{ Auth::user()->name }} ({{ ucfirst(Auth::user()->role) }})
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-link nav-link" style="display:inline; padding: 0;">Logout</button>
+                        </form>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}">Login</a>
+                    </li>
+                @endauth
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     <!-- Main Content -->
     <main class="py-4">

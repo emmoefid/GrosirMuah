@@ -7,6 +7,7 @@ use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -51,3 +52,11 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
 // route untuk struk
 Route::get('/sales/receipt/{id}', [SaleController::class, 'receipt'])->name('sales.receipt')->middleware('auth');
+
+// route untuk laporan
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/laporan', [ReportController::class, 'index'])->name('report.index');
+});
+
+// route untuk cetak laporan(pdf) penjualan
+Route::get('/laporan/cetak', [ReportController::class, 'exportPdf'])->name('report.pdf')->middleware('auth', 'is_admin');
