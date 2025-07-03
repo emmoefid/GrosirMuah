@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container">
-    <h2>Manajemen User</h2>
+    <h2>Manajemen Pengguna</h2>
 
-    <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Tambah User</a>
+    <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Tambah Pengguna</a>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

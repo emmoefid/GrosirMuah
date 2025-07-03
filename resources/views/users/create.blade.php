@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h2>Tambah User</h2>
+    <h2>Tambah Pengguna</h2>
 
     <form action="{{ route('users.store') }}" method="POST">
         @csrf
