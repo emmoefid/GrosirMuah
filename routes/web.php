@@ -60,3 +60,9 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
 // route untuk cetak laporan(pdf) penjualan
 Route::get('/laporan/cetak', [ReportController::class, 'exportPdf'])->name('report.pdf')->middleware('auth', 'is_admin');
+
+// riwayat transaksi
+Route::middleware(['auth'])->group(function () {
+    Route::get('/riwayat', [App\Http\Controllers\SaleController::class, 'history'])->name('sales.history');
+    Route::get('/riwayat/{id}', [App\Http\Controllers\SaleController::class, 'historyDetail'])->name('sales.history.detail');
+});

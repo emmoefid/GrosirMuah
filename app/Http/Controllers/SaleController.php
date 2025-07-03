@@ -19,7 +19,10 @@ class SaleController extends Controller
 
     public function scanBarcode(Request $request)
     {
-        $request->validate(['barcode' => 'required']);
+        $request->validate([
+            'barcode' => 'required',
+            'quantity' => 'required|integer|min:1'
+        ]);
         $product = Product::where('barcode', $request->barcode)->first();
 
         if (!$product) {
@@ -27,20 +30,22 @@ class SaleController extends Controller
         }
 
         $cart = session()->get('cart', []);
+        $qty = $request->quantity;
+
         if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity']++;
+            $cart[$product->id]['quantity'] += $qty;
             $cart[$product->id]['subtotal'] = $cart[$product->id]['quantity'] * $product->price;
         } else {
             $cart[$product->id] = [
                 'name' => $product->name,
                 'price' => $product->price,
-                'quantity' => 1,
-                'subtotal' => $product->price,
+                'quantity' => $qty,
+                'subtotal' => $qty * $product->price,
             ];
         }
 
         session()->put('cart', $cart);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang');
     }
 
     public function destroyItem($id)
@@ -62,9 +67,14 @@ class SaleController extends Controller
             return redirect()->back()->with('error', 'Keranjang kosong');
         }
 
+        $total = collect($cart)->sum(fn($item) => $item['subtotal']);
+
+        if ($request->paid_amount < $total) {
+            return redirect()->back()->with('error', 'Uang yang dibayarkan kurang dari total belanja');
+        }
+
         DB::beginTransaction();
         try {
-            $total = collect($cart)->sum(fn($item) => $item['subtotal']);
             $change = $request->paid_amount - $total;
 
             $sale = Sale::create([
@@ -100,5 +110,26 @@ class SaleController extends Controller
     {
         $sale = Sale::with(['items.product', 'user'])->findOrFail($id);
         return view('sales.receipt', compact('sale'));
+    }
+
+    // riwayat transaksi
+    public function history()
+    {
+        $sales = auth()->user()->role === 'admin'
+            ? Sale::with('user')->latest()->get()
+            : Sale::where('user_id', auth()->id())->latest()->get();
+
+        return view('sales.history', compact('sales'));
+    }
+
+    public function historyDetail($id)
+    {
+        $sale = Sale::with(['items.product', 'user'])->findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $sale->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('sales.history-detail', compact('sale'));
     }
 }

@@ -64,7 +64,12 @@
                             <a class="nav-link {{ request()->routeIs('report.index') ? 'active' : '' }}" href="{{ route('report.index') }}">Laporan</a>
                         </li>
                     @endif
-
+                    
+                    @if (Auth::user()->role === 'admin' || Auth::user()->role === 'kasir')
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('sales.history') ? 'active' : '' }}" href="{{ route('sales.history') }}">Riwayat</a>
+                        </li>
+                    @endif
                     <li class="nav-item">
                         <span class="nav-link disabled">
                             <i class="bi bi-person-circle"></i>

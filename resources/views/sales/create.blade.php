@@ -11,18 +11,21 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <!-- Form Scan Barcode -->
+    <!-- rorm scan barcode -->
     <form action="{{ route('sales.scan') }}" method="POST" class="row mb-4">
         @csrf
-        <div class="col-md-8">
+        <div class="col-md-6">
             <input type="text" name="barcode" class="form-control" placeholder="Scan atau ketik barcode..." required autofocus>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <input type="number" name="quantity" class="form-control" placeholder="Jumlah" min="1" value="1" required>
+        </div>
+        <div class="col-md-3">
             <button class="btn btn-primary w-100">Tambah ke Keranjang</button>
         </div>
     </form>
 
-    <!-- Keranjang -->
+    <!-- keranjang -->
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -55,7 +58,7 @@
 
     <h4>Total: Rp{{ number_format($total, 0, ',', '.') }}</h4>
 
-    <!-- Form Checkout -->
+    <!-- form checkout -->
     @if ($total > 0)
     <form action="{{ route('sales.store') }}" method="POST">
         @csrf
