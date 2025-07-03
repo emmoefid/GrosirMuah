@@ -110,7 +110,7 @@
 
 <!-- Footer -->
 <footer>
-    &copy; {{ date('Y') }} GrosirMuah. All rights reserved.
+    &copy; {{ date('Y') }} GrosirMuah. Hak cipta dilindungi undang-undang.
 </footer>
 
 <!-- Bootstrap JS & Icons -->

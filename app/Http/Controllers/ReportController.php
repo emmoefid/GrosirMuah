@@ -39,18 +39,50 @@ class ReportController extends Controller
         return $pdf->stream('laporan-penjualan.pdf');
     }
     // grafik
-    public function chart()
+    public function chart(Request $request)
     {
-        $data = Sale::selectRaw('DATE(created_at) as date, COUNT(*) as total_transaksi, SUM(total_price) as omzet')
-            ->whereMonth('created_at', now()->month)
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get();
+        $mode = $request->get('mode', 'day');
 
-        $labels = $data->pluck('date')->map(fn($d) => \Carbon\Carbon::parse($d)->format('d M'))->toArray();
+        switch ($mode) {
+            case 'week':
+                $data = Sale::selectRaw("WEEK(created_at, 1) as label, COUNT(*) as total_transaksi, SUM(total_price) as omzet")
+                    ->whereYear('created_at', now()->year)
+                    ->groupBy('label')
+                    ->orderBy('label')
+                    ->get();
+                $labels = $data->pluck('label')->map(fn($w) => "Minggu-$w")->toArray();
+                break;
+
+            case 'month':
+                $data = Sale::selectRaw("
+                        MONTH(created_at) as bulan,
+                        DATE_FORMAT(created_at, '%M') as label,
+                        COUNT(*) as total_transaksi,
+                        SUM(total_price) as omzet
+                    ")
+                    ->whereYear('created_at', now()->year)
+                    ->groupByRaw('bulan, label')
+                    ->orderBy('bulan')
+                    ->get();
+
+                $labels = $data->pluck('label')->toArray();
+                break;
+
+            case 'day':
+            default:
+                $data = Sale::selectRaw("DATE(created_at) as label, COUNT(*) as total_transaksi, SUM(total_price) as omzet")
+                    ->whereMonth('created_at', now()->month)
+                    ->groupBy('label')
+                    ->orderBy('label')
+                    ->get();
+                $labels = $data->pluck('label')->map(fn($d) => \Carbon\Carbon::parse($d)->format('d M'))->toArray();
+                break;
+        }
+
         $jumlahTransaksi = $data->pluck('total_transaksi')->toArray();
         $jumlahOmzet = $data->pluck('omzet')->toArray();
 
-        return view('report.chart', compact('labels', 'jumlahTransaksi', 'jumlahOmzet'));
+        return view('report.chart', compact('labels', 'jumlahTransaksi', 'jumlahOmzet', 'mode'));
     }
+
 }

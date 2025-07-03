@@ -2,7 +2,16 @@
 
 @section('content')
 <div class="container">
-    <h2>Grafik Penjualan Bulan Ini</h2>
+    <h2>Grafik Penjualan</h2>
+
+    <form method="GET" class="mb-4">
+        <label for="mode" class="form-label">Lihat grafik berdasarkan:</label>
+        <select name="mode" id="mode" class="form-select w-auto d-inline-block" onchange="this.form.submit()">
+            <option value="day" {{ $mode === 'day' ? 'selected' : '' }}>Harian (Bulan Ini)</option>
+            <option value="week" {{ $mode === 'week' ? 'selected' : '' }}>Mingguan (Tahun Ini)</option>
+            <option value="month" {{ $mode === 'month' ? 'selected' : '' }}>Bulanan (Tahun Ini)</option>
+        </select>
+    </form>
 
     <canvas id="penjualanChart" height="100"></canvas>
 </div>
