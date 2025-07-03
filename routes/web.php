@@ -66,3 +66,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/riwayat', [App\Http\Controllers\SaleController::class, 'history'])->name('sales.history');
     Route::get('/riwayat/{id}', [App\Http\Controllers\SaleController::class, 'historyDetail'])->name('sales.history.detail');
 });
+
+// grafik
+Route::middleware(['auth', 'is_admin'])->get('/grafik', [App\Http\Controllers\ReportController::class, 'chart'])->name('report.chart');

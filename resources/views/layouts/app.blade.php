@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GrosirMuah</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}">
+    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Style -->
     <style>
         body {
             font-family: 'Montserrat', Arial, sans-serif;
@@ -42,8 +46,8 @@
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">GrosirMuah</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
@@ -63,13 +67,17 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('report.index') ? 'active' : '' }}" href="{{ route('report.index') }}">Laporan</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('report.chart') ? 'active' : '' }}" href="{{ route('report.chart') }}">Grafik</a>
+                        </li>
                     @endif
-                    
+
                     @if (Auth::user()->role === 'admin' || Auth::user()->role === 'kasir')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('sales.history') ? 'active' : '' }}" href="{{ route('sales.history') }}">Riwayat</a>
                         </li>
                     @endif
+
                     <li class="nav-item">
                         <span class="nav-link disabled">
                             <i class="bi bi-person-circle"></i>
@@ -92,19 +100,22 @@
     </div>
 </nav>
 
+<!-- Main Content -->
+<main class="py-4">
+    @yield('content')
+</main>
 
-    <!-- Main Content -->
-    <main class="py-4">
-        @yield('content')
-    </main>
+<!-- Footer -->
+<footer>
+    &copy; {{ date('Y') }} GrosirMuah. All rights reserved.
+</footer>
 
-    <!-- Footer -->
-    <footer>
-        &copy; {{ date('Y') }} GrosirMuah. All rights reserved.
-    </footer>
+<!-- Bootstrap JS & Icons -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <!-- Bootstrap JS & Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Tambahan Script Dinamis -->
+@stack('scripts')
+
 </body>
 </html>

@@ -38,4 +38,19 @@ class ReportController extends Controller
         $pdf = Pdf::loadView('report.pdf', compact('sales', 'start', 'end', 'total'));
         return $pdf->stream('laporan-penjualan.pdf');
     }
+    // grafik
+    public function chart()
+    {
+        $data = Sale::selectRaw('DATE(created_at) as date, COUNT(*) as total_transaksi, SUM(total_price) as omzet')
+            ->whereMonth('created_at', now()->month)
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        $labels = $data->pluck('date')->map(fn($d) => \Carbon\Carbon::parse($d)->format('d M'))->toArray();
+        $jumlahTransaksi = $data->pluck('total_transaksi')->toArray();
+        $jumlahOmzet = $data->pluck('omzet')->toArray();
+
+        return view('report.chart', compact('labels', 'jumlahTransaksi', 'jumlahOmzet'));
+    }
 }
