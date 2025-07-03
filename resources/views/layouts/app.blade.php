@@ -62,6 +62,9 @@
                             <a class="nav-link {{ request()->routeIs('products.index') ? 'active' : '' }}" href="{{ route('products.index') }}">Produk</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('categories.index') ? 'active' : '' }}" href="{{ route('categories.index') }}">Kategori</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">Pengguna</a>
                         </li>
                         <li class="nav-item">
